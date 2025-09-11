@@ -3,18 +3,22 @@ package main
 import (
 	"linkShortener/configs"
 	"linkShortener/internal/database"
+	"linkShortener/internal/handler"
 
 	"github.com/gin-gonic/gin"
 )
 
 func init() {
-	configs.Load("./deployments/.env")
+	configs.Load("./deployment/.env")
 	database.ConnectToDB()
 	database.Migrate()
 }
 
 func main() {
-	server := gin.Default()
+	router := gin.Default()
 
-	server.Run()
+	router.POST("/api/v1/links", handler.CreateLink)
+	router.GET("/api/v1/links/:code", handler.Forward)
+
+	router.Run()
 }
