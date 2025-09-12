@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"linkShortener/configs"
 	"linkShortener/internal/database"
 	"linkShortener/internal/errors"
 	"linkShortener/internal/model"
@@ -26,7 +27,7 @@ func CreateLink(longLink string) (shortedLink string, err *errors.HttpError) {
 		return "", errors.NewHttpError(503, "Service unavailable")
 	}
 
-	return fmt.Sprintf("http://localhost:8080/api/v1/links/%s", linkModel.ShortUrl), nil
+	return fmt.Sprintf("%s/api/v1/links/%s", configs.BaseUrl, linkModel.ShortUrl), nil
 }
 
 func GetLink(shortLink string) (longLink string, err *errors.HttpError) {

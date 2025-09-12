@@ -21,9 +21,10 @@ func (key EnvKey) GetValue() string {
 }
 
 const (
-	DbHost EnvKey = "DB_HOST"
-	DbPort EnvKey = "DB_PORT"
-	DbUser EnvKey = "DB_USER"
-	DbPass EnvKey = "DB_PASS"
-	DbName EnvKey = "DB_NAME"
+	DbHost  EnvKey = "DB_HOST"
+	DbPort  EnvKey = "DB_PORT"
+	DbUser  EnvKey = "DB_USER"
+	DbPass  EnvKey = "DB_PASS"
+	DbName  EnvKey = "DB_NAME"
+	BaseUrl EnvKey = "BASE_URL"
 )

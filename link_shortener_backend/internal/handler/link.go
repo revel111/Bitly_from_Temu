@@ -31,7 +31,7 @@ func CreateLink(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, gin.H{
+	c.JSON(http.StatusCreated, gin.H{
 		"message": "Created link",
 		"url":     link,
 	})

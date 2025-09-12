@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	configs.Load("./deployment/.env")
+	configs.Load("./deployment/.env") // for local development
 	db := database.ConnectToDB()
 	database.Migrate(db)
 
