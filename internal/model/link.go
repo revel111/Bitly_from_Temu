@@ -3,7 +3,8 @@ package model
 import "time"
 
 type Link struct {
-	ShortUrl  string    `gorm:"primaryKey" json:"short_url,omitempty"`
-	LongUrl   string    `gorm:"uniqueIndex" json:"long_url,omitempty"`
-	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at,omitempty"`
+	Id        uint64    `gorm:"primaryKey" json:"id;autoIncrement"`
+	ShortUrl  string    `gorm:"uniqueIndex" json:"short_url"`
+	LongUrl   string    `gorm:"uniqueIndex" json:"long_url;not null"`
+	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at;not null"`
 }

@@ -50,8 +50,5 @@ func Forward(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, gin.H{
-		"message": "Forwarding to original URL",
-		"link":    link,
-	})
+	c.Redirect(http.StatusFound, link)
 }
