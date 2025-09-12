@@ -13,7 +13,7 @@ func CreateLink(longLink string) (shortedLink string, err *errors.HttpError) {
 	result := database.DB.First(&linkModel, "long_url = ?", longLink)
 
 	if result.RowsAffected == 1 {
-		return "", errors.NewHttpError(409, "Link already exists")
+		return linkModel.LongUrl, errors.NewHttpError(409, "Link already exists")
 	}
 
 	linkModel.LongUrl = longLink

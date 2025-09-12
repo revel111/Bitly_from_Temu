@@ -20,10 +20,14 @@ func CreateLink(c *gin.Context) {
 
 	link, err := service.CreateLink(req.Url)
 	if err != nil {
-		c.JSON(err.Code, gin.H{
+		response := gin.H{
 			"Message":   err.Msg,
 			"Timestamp": err.Timestamp,
-		})
+		}
+		if link != "" {
+			response["url"] = link
+		}
+		c.JSON(err.Code, response)
 		return
 	}
 

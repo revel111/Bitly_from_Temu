@@ -27,12 +27,12 @@ func ConnectToDB() *gorm.DB {
 	return DB
 }
 
-func Migrate() {
-	if DB == nil {
+func Migrate(db *gorm.DB) {
+	if db == nil {
 		log.Fatalf("Database connection is not established")
 	}
 
-	if err := DB.AutoMigrate(&model.Link{}); err != nil {
+	if err := db.AutoMigrate(&model.Link{}); err != nil {
 		log.Fatalf("failed to migrate: %v", err)
 	}
 }
