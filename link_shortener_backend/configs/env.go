@@ -21,10 +21,13 @@ func (key EnvKey) GetValue() string {
 }
 
 const (
-	DbHost  EnvKey = "DB_HOST"
-	DbPort  EnvKey = "DB_PORT"
-	DbUser  EnvKey = "DB_USER"
-	DbPass  EnvKey = "DB_PASS"
-	DbName  EnvKey = "DB_NAME"
-	BaseUrl EnvKey = "BASE_URL"
+	DbHost    EnvKey = "DB_HOST"
+	DbPort    EnvKey = "DB_PORT"
+	DbUser    EnvKey = "DB_USER"
+	DbPass    EnvKey = "DB_PASS"
+	DbName    EnvKey = "DB_NAME"
+	RedisHost EnvKey = "REDIS_HOST"
+	RedisPort EnvKey = "REDIS_PORT"
+	RedisPass EnvKey = "REDIS_PASS"
+	BaseUrl   EnvKey = "BASE_URL"
 )

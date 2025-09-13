@@ -56,3 +56,25 @@ func Forward(c *gin.Context) {
 
 	c.Redirect(http.StatusFound, link)
 }
+
+func GetCount(c *gin.Context) {
+	shortCode := c.Param("code")
+
+	if shortCode == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Link parameter is required"})
+		return
+	}
+
+	count, err := service.GetCounter(shortCode)
+	if err != nil {
+		c.JSON(err.Code, gin.H{
+			"Message":   err.Msg,
+			"Timestamp": err.Timestamp,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"count": count,
+	})
+}

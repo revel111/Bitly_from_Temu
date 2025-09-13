@@ -12,5 +12,17 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  redis-counter:
+    image: redis:latest
+    container_name: shortener-counter
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning --requirepass password
+    volumes:
+      - counter_data:/var/lib/redis/data
+
+
 volumes:
   postgres_data:
+  counter_data:
