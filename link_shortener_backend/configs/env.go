@@ -1,20 +1,28 @@
 package configs
 
 import (
-	"log"
 	"os"
 
 	"github.com/joho/godotenv"
 )
 
-func Load(path string) {
+func Load(path string) error {
 	err := godotenv.Load(path)
 	if err != nil {
-		log.Printf("No .env file %s found\n", path)
+		return err
 	}
+
+	return &EnvKey{{
+		DB_HOST: "DB_HOST",
+	}}
 }
 
-type EnvKey string
+// todo: why not config struct?
+type EnvKey struct {
+	DB_HOST string
+	DB_PORT string
+	DB_USER string
+}
 
 func (key EnvKey) GetValue() string {
 	return os.Getenv(string(key))

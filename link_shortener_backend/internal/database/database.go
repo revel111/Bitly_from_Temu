@@ -2,9 +2,10 @@ package database
 
 import (
 	"fmt"
+	"log"
+
 	"linkShortener/configs"
 	"linkShortener/internal/model"
-	"log"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -12,6 +13,7 @@ import (
 
 var DB *gorm.DB
 
+// todo: constructor injection?
 func ConnectToDB() *gorm.DB {
 	var err error
 

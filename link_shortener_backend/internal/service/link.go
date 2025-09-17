@@ -1,26 +1,28 @@
 package service
 
 import (
-	"context"
 	"errors"
 	"fmt"
+	"log"
+	"strconv"
+
 	"linkShortener/configs"
 	"linkShortener/internal/database"
 	"linkShortener/internal/httperrors"
 	"linkShortener/internal/model"
 	"linkShortener/internal/utilities"
-	"log"
-	"strconv"
 
 	"github.com/redis/go-redis/v9"
 )
 
+// todo: service layer why http errors?
 func CreateLink(longLink string) (shortedLink string, err *httperrors.HttpError) {
 	var linkModel model.Link
+	//todo: databse infra layer
 	result := database.DB.First(&linkModel, "long_url = ?", longLink)
 
 	if result.RowsAffected == 1 {
-		return linkModel.ShortUrl, httperrors.NewHttpError(409, "Link already exists")
+		return
 	}
 
 	linkModel.LongUrl = longLink
@@ -36,6 +38,7 @@ func CreateLink(longLink string) (shortedLink string, err *httperrors.HttpError)
 	return fmt.Sprintf("%s/api/v1/links/%s", configs.BaseUrl.GetValue(), linkModel.ShortUrl), nil
 }
 
+// todo: separate usecases
 func GetLink(shortLink string) (longLink string, err *httperrors.HttpError) {
 	var linkModel model.Link
 	result := database.DB.First(&linkModel, "short_url = ?", shortLink)
@@ -44,6 +47,7 @@ func GetLink(shortLink string) (longLink string, err *httperrors.HttpError) {
 		return "", httperrors.NewHttpError(404, "Link not found")
 	}
 
+	//todo: infra layer
 	_, incErr := database.CounterClient.Incr(context.Background(), shortLink).Result()
 	if incErr != nil && !errors.Is(incErr, redis.Nil) {
 		log.Println("Error incrementing counter: ", incErr)

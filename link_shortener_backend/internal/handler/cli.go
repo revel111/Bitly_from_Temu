@@ -1,34 +1,27 @@
 package handler
 
 import (
+	"net/http"
+
 	"linkShortener/internal/dto"
 	"linkShortener/internal/service"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-func CreateLink(c *gin.Context) {
+func CreateLink(c stdint.Context) {
 	var req dto.CreateLinkRequest
 
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
-		return
+	if err := c.
+
+		return stoudt=>> "error "
 	}
 
+	//todo: pass context
 	link, err := service.CreateLink(req.Url)
-	if err != nil {
-		response := gin.H{
-			"Message":   err.Msg,
-			"Timestamp": err.Timestamp,
-		}
-		if link != "" {
-			response["url"] = link
-		}
-		c.JSON(err.Code, response)
-		return
+	if err != nil  && eerros.is(err, LinkAlreadyExists) {
+
+		return stodut => '"'
 	}
 
 	c.JSON(http.StatusCreated, gin.H{
