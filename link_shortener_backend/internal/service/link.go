@@ -1,8 +1,10 @@
 package service
 
 import (
+	"context"
 	"errors"
 	"fmt"
+	"linkShortener/pkg"
 	"log"
 	"strconv"
 
@@ -10,7 +12,6 @@ import (
 	"linkShortener/internal/database"
 	"linkShortener/internal/httperrors"
 	"linkShortener/internal/model"
-	"linkShortener/internal/utilities"
 
 	"github.com/redis/go-redis/v9"
 )
@@ -30,7 +31,7 @@ func CreateLink(longLink string) (shortedLink string, err *httperrors.HttpError)
 		return "", httperrors.NewHttpError(503, "Service unavailable")
 	}
 
-	linkModel.ShortUrl = utilities.Encode(linkModel.Id)
+	linkModel.ShortUrl = pkg.EncodeBase62(linkModel.Id)
 	if err := database.DB.Save(&linkModel).Error; err != nil {
 		return "", httperrors.NewHttpError(503, "Service unavailable")
 	}

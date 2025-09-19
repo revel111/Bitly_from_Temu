@@ -3,39 +3,37 @@ package configs
 import (
 	"os"
 
-	"github.com/joho/godotenv"
+	_ "github.com/joho/godotenv/autoload"
 )
 
-func Load(path string) error {
-	err := godotenv.Load(path)
-	if err != nil {
-		return err
+func getEnv(key, defaultValue string) string {
+	val := os.Getenv(key)
+	if val == "" {
+		return defaultValue
 	}
-
-	return &EnvKey{{
-		DB_HOST: "DB_HOST",
-	}}
+	return val
 }
 
-// todo: why not config struct?
-type EnvKey struct {
-	DB_HOST string
-	DB_PORT string
-	DB_USER string
+func LoadEnvVariables() *ConfigData {
+	return &ConfigData{
+		DbHost:    getEnv("DB_HOST", "localhost"),
+		DbPort:    getEnv("DB_PORT", "5432"),
+		DbUser:    getEnv("DB_USER", "admin"),
+		DbPass:    getEnv("DB_PASS", "admin"),
+		DbName:    getEnv("DB_NAME", "postgres"),
+		RedisHost: getEnv("REDIS_HOST", "localhost"),
+		RedisPort: getEnv("REDIS_PORT", "6379"),
+		RedisPass: getEnv("REDIS_PASS", "admin"),
+	}
 }
 
-func (key EnvKey) GetValue() string {
-	return os.Getenv(string(key))
+type ConfigData struct {
+	DbHost    string
+	DbPort    string
+	DbUser    string
+	DbPass    string
+	DbName    string
+	RedisHost string
+	RedisPort string
+	RedisPass string
 }
-
-const (
-	DbHost    EnvKey = "DB_HOST"
-	DbPort    EnvKey = "DB_PORT"
-	DbUser    EnvKey = "DB_USER"
-	DbPass    EnvKey = "DB_PASS"
-	DbName    EnvKey = "DB_NAME"
-	RedisHost EnvKey = "REDIS_HOST"
-	RedisPort EnvKey = "REDIS_PORT"
-	RedisPass EnvKey = "REDIS_PASS"
-	BaseUrl   EnvKey = "BASE_URL"
-)

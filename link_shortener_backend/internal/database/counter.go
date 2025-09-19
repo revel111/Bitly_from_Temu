@@ -9,19 +9,24 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-var CounterClient *redis.Client
-
-func ConnectCounter() *redis.Client {
-	CounterClient = redis.NewClient(&redis.Options{
-		Addr:     fmt.Sprintf("%s:%s", configs.RedisHost.GetValue(), configs.RedisPort.GetValue()),
-		Password: configs.RedisPass.GetValue(),
+func ConnectCounter(data configs.ConfigData) (*redis.Client, func(), error) {
+	CounterClient := redis.NewClient(&redis.Options{
+		Addr:     fmt.Sprintf("%s:%s", data.RedisHost, data.RedisPort),
+		Password: data.RedisPass,
 		DB:       0,
 	})
 
 	response, err := CounterClient.Ping(context.Background()).Result()
+
 	if err != nil || response != "PONG" {
-		log.Fatalf("Error connecting to redis counter: %v", err)
+		return nil, nil, err
 	}
 
-	return CounterClient
+	closer := func() {
+		if err := CounterClient.Close(); err != nil {
+			log.Printf("Error closing Redis client: %v", err)
+		}
+	}
+
+	return CounterClient, closer, nil
 }

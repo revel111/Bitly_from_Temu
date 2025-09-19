@@ -1,12 +1,11 @@
-package utilities
+package pkg
 
 import "strings"
 
 const alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 const base = int64(len(alphabet))
 
-// todo: why encode?
-func Encode(num uint64) string {
+func EncodeBase62(num uint64) string {
 	if num == 0 {
 		return string(alphabet[0])
 	}

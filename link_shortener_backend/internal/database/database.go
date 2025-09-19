@@ -11,30 +11,33 @@ import (
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
-
-// todo: constructor injection?
-func ConnectToDB() *gorm.DB {
-	var err error
-
+func ConnectToDB(data configs.ConfigData) (*gorm.DB, func(), error) {
 	connectionString := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=UTC",
-		configs.DbHost.GetValue(), configs.DbUser.GetValue(), configs.DbPass.GetValue(), configs.DbName.GetValue(), configs.DbPort.GetValue())
+		data.DbHost, data.DbUser, data.DbPass, data.DbName, data.DbPort)
 
-	DB, err = gorm.Open(postgres.Open(connectionString), &gorm.Config{})
-
+	db, err := gorm.Open(postgres.Open(connectionString), &gorm.Config{})
 	if err != nil {
-		log.Fatalf("Error connecting to database: %v", err)
+		return nil, nil, err
 	}
 
-	return DB
+	closer := func() {
+		sqlDB, err := db.DB()
+		if err != nil {
+			log.Printf("Error getting database: %v", err)
+			return
+		}
+		if err := sqlDB.Close(); err != nil {
+			log.Printf("Error closing database: %v", err)
+		}
+	}
+
+	return db, closer, nil
 }
 
-func Migrate(db *gorm.DB) {
+func Migrate(db *gorm.DB) error {
 	if db == nil {
 		log.Fatalf("Database connection is not established")
 	}
 
-	if err := db.AutoMigrate(&model.Link{}); err != nil {
-		log.Fatalf("failed to migrate: %v", err)
-	}
+	return db.AutoMigrate(&model.Link{})
 }
