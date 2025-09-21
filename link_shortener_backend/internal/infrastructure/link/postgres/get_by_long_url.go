@@ -1,8 +1,6 @@
 package postgres
 
-import (
-	"linkShortener/internal/domain/link"
-)
+import "linkShortener/internal/domain/link"
 
 func (repo LinkRepository) GetByLongUrl(longUrl string) (*link.Link, error) {
 	var linkModel *DbLink

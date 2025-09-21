@@ -1,8 +1,6 @@
 package postgres
 
-import (
-	domain "linkShortener/internal/domain/link"
-)
+import domain "linkShortener/internal/domain/link"
 
 func ToDb(link *domain.Link) *DbLink {
 	if link == nil {
