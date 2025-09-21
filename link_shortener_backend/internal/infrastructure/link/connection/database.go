@@ -1,11 +1,11 @@
-package database
+package connection
 
 import (
 	"fmt"
 	"log"
 
 	"linkShortener/configs"
-	"linkShortener/internal/model"
+	postgreslink "linkShortener/internal/infrastructure/link/postgres"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -20,7 +20,19 @@ func ConnectToDB(data configs.ConfigData) (*gorm.DB, func(), error) {
 		return nil, nil, err
 	}
 
-	closer := func() {
+	return db, closeDB(db), nil
+}
+
+func Migrate(db *gorm.DB) error {
+	if db == nil {
+		log.Fatalf("Database connection is not established")
+	}
+
+	return db.AutoMigrate(&postgreslink.DbLink{})
+}
+
+func closeDB(db *gorm.DB) func() {
+	return func() {
 		sqlDB, err := db.DB()
 		if err != nil {
 			log.Printf("Error getting database: %v", err)
@@ -30,14 +42,4 @@ func ConnectToDB(data configs.ConfigData) (*gorm.DB, func(), error) {
 			log.Printf("Error closing database: %v", err)
 		}
 	}
-
-	return db, closer, nil
-}
-
-func Migrate(db *gorm.DB) error {
-	if db == nil {
-		log.Fatalf("Database connection is not established")
-	}
-
-	return db.AutoMigrate(&model.Link{})
 }

@@ -1,4 +1,4 @@
-package database
+package connection
 
 import (
 	"context"
@@ -10,23 +10,25 @@ import (
 )
 
 func ConnectCounter(data configs.ConfigData) (*redis.Client, func(), error) {
-	CounterClient := redis.NewClient(&redis.Options{
+	counterClient := redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%s", data.RedisHost, data.RedisPort),
 		Password: data.RedisPass,
 		DB:       0,
 	})
 
-	response, err := CounterClient.Ping(context.Background()).Result()
+	response, err := counterClient.Ping(context.Background()).Result()
 
 	if err != nil || response != "PONG" {
 		return nil, nil, err
 	}
 
-	closer := func() {
-		if err := CounterClient.Close(); err != nil {
+	return counterClient, closeDb(counterClient), nil
+}
+
+func closeDb(counterClient *redis.Client) func() {
+	return func() {
+		if err := counterClient.Close(); err != nil {
 			log.Printf("Error closing Redis client: %v", err)
 		}
 	}
-
-	return CounterClient, closer, nil
 }

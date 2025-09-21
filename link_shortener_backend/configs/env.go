@@ -23,7 +23,7 @@ func LoadEnvVariables() *ConfigData {
 		DbName:    getEnv("DB_NAME", "postgres"),
 		RedisHost: getEnv("REDIS_HOST", "localhost"),
 		RedisPort: getEnv("REDIS_PORT", "6379"),
-		RedisPass: getEnv("REDIS_PASS", "admin"),
+		RedisPass: getEnv("REDIS_PASS", "password"),
 	}
 }
 
